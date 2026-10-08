@@ -1,0 +1,138 @@
+@import "tailwindcss";
+
+@theme {
+  /* Kept from the original theme so existing hover states render the same. */
+  --color-white: #e2eef1;
+}
+
+:root {
+  --ease-calm: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-settle: cubic-bezier(0.34, 1.2, 0.64, 1);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: #f5f4f2;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Motion ─────────────────────────────────────────────────────────────── */
+
+/* Chairs rest on their clouds: a slow, small float */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+.float {
+  animation: float 7s var(--ease-calm) infinite;
+}
+.float-delay-1 {
+  animation-delay: -1.8s;
+}
+.float-delay-2 {
+  animation-delay: -3.6s;
+}
+.float-delay-3 {
+  animation-delay: -5.4s;
+}
+
+/* Scroll parallax: JS writes --parallax (px) on the element */
+.parallax {
+  transform: translate3d(0, var(--parallax, 0px), 0);
+  will-change: transform;
+}
+
+/* Reveal on scroll: visible by default; JS hides only what is below the fold */
+.js-reveal [data-reveal]:not([data-in]) {
+  opacity: 0;
+  transform: translateY(24px);
+}
+.js-reveal [data-reveal] {
+  transition:
+    opacity 900ms var(--ease-calm),
+    transform 900ms var(--ease-calm);
+  transition-delay: calc(var(--i, 0) * 110ms);
+}
+
+/* Page load: hero text rises in */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+.rise {
+  animation: rise 1s var(--ease-calm) both;
+  animation-delay: calc(var(--i, 0) * 120ms + 100ms);
+}
+
+/* Mobile menu */
+@keyframes menu-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes link-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+}
+
+/* ── View transitions (navigation) ──────────────────────────────────────── */
+
+/* The chair glides from the home section into the product hero */
+::view-transition-group(.chair) {
+  animation-duration: 700ms;
+  animation-timing-function: var(--ease-calm);
+}
+/* Everything else crossfades softly */
+::view-transition-old(root) {
+  animation: 260ms var(--ease-calm) both fade-out;
+}
+::view-transition-new(root) {
+  animation: 420ms var(--ease-calm) 80ms both fade-in;
+}
+@keyframes fade-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after,
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+  .parallax {
+    transform: none;
+  }
+  .js-reveal [data-reveal]:not([data-in]) {
+    opacity: 1;
+    transform: none;
+  }
+}
