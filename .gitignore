@@ -8,3 +8,7 @@ next-env.d.ts
 
 # Source renders, material studies and process images (kept local; shown in the portfolio case study)
 design/
+
+# Local project brief for collaborators (kept off GitHub)
+PROJECT-BRIEF.md
+CLAUDE.md
